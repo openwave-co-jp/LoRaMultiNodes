@@ -12,7 +12,7 @@ int msgLength = strlen((char*)msg);
 int packetCount = 0;
 
 RH_RF95 rf95;
-float frequency = 923.6;
+float frequency = 920.6;
 
 void setup() {
   Serial.begin(9600);
