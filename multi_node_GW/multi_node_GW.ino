@@ -5,7 +5,7 @@
 YunClient client;
 
 RH_RF95 rf95;
-float frequency = 923.6;
+float frequency = 920.6;
 unsigned long myChannelNumber = 238209;
 const char * myWriteAPIKey = "EAUCAMYMZ3NBKR2B";
 int cnt = 0;
