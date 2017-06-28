@@ -36,6 +36,7 @@ void loop() {
   {
     uint8_t message[RH_RF95_MAX_MESSAGE_LEN];//receive data buffer
     uint8_t len = sizeof(message);//data buffer length
+    memset( message , '\0' , len );
     if (rf95.recv(message, &len))//Check if there is incoming data
     {
       if(message[0] == 'x'){ //ヘッダの確認
