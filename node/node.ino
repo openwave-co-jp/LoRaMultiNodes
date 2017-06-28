@@ -7,8 +7,7 @@
 
 
 int node_id = 0;
-char msg[100] = "Test Message";
-int msgLength = strlen((char*)msg);
+char msg[100] = "";
 int packetCount = 0;
 
 RH_RF95 rf95;
@@ -43,20 +42,14 @@ void setup() {
 
 void loop() {
 
-  msg[msgLength] = ',';
-  msg[msgLength+1] = node_id;
-  msg[msgLength+2] = ++packetCount;
-  msg[msgLength+3] = 0;
+  msg[0] = 'x';//ヘッダ
+  msg[1] = node_id;
+  msg[2] = ++packetCount;
+  strcat(msg, ",");
+  strcat(msg, "Test Message");
+  
   Serial.println(packetCount);
   Serial.println(msg);
-
-  Serial.println("carrier sense start");
-  for(int i = 0; i < 10; i++){
-    if(!(rf95.waitAvailableTimeout(5) && -80 < (int)rf95.lastRssi())){
-      Serial.println("collision!!!!");
-      delay(3000);//他の通信が終わるだけの時間を指定
-    }
-  }
   
   Serial.println("send start");
   rf95.send(msg, strlen((char*)msg));
@@ -88,6 +81,8 @@ void loop() {
         rf95.send(msg, strlen((char*)msg));//resend data
     }
   }
+  int msgLength = strlen((char*)msg);
+  memset( msg , '\0' , msgLength );
   Serial.println("send end");
   delay(7000);//次の送信までのウェイト
 }

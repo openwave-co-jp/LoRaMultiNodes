@@ -6,8 +6,7 @@ YunClient client;
 
 RH_RF95 rf95;
 float frequency = 920.6;
-unsigned long myChannelNumber = 238209;
-const char * myWriteAPIKey = "EAUCAMYMZ3NBKR2B";
+
 int cnt = 0;
 void setup() {
   Bridge.begin(115200);
@@ -39,9 +38,7 @@ void loop() {
     uint8_t len = sizeof(message);//data buffer length
     if (rf95.recv(message, &len))//Check if there is incoming data
     {
-      Console.println((char*)message);
-      
-      char *tp;
+      char *tp, head;
       int cnt=0;
       /* ,を区切りに文字列を抽出 */   
       tp = strtok( message, "," );
@@ -52,21 +49,25 @@ void loop() {
         cnt++;
         
         if(cnt==1){
+          head=tp[0];
+          Console.print("Id:");
+          id=tp[1];
+          packetCount=tp[2];
+          Console.println(id);
+        }
+        
+        if(cnt==2){
           Console.print("msg:");
           msg=String(tp);
           Console.println(msg);
-          
+     
         }
 
-        if(cnt==2){
-          Console.print("Id:");
-          id=tp[0];
-          packetCount=tp[1];
-          Console.println(id);
-        }
+
         tp = strtok( NULL,"," );
       }
-      if(msg.startsWith("Test")){
+      
+      if(head == 'x'){ //ヘッダの確認
         Console.print("packetCount:");
         Console.print((uint8_t)packetCount);Console.print(" ");
         // print RSSI of packet
