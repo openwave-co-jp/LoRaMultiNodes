@@ -38,36 +38,34 @@ void loop() {
     uint8_t len = sizeof(message);//data buffer length
     if (rf95.recv(message, &len))//Check if there is incoming data
     {
-      char *tp, head;
-      int cnt=0;
-      /* ,を区切りに文字列を抽出 */   
-      tp = strtok( message, "," );
-      String msg;
-      int packetCount,id;
-      
-      while ( tp != NULL ) {
-        cnt++;
+      if(message[0] == 'x'){ //ヘッダの確認
+        char *tp, head;
+        int cnt=0;
+        /* ,を区切りに文字列を抽出 */   
+        tp = strtok( message, "," );
+        String msg;
+        int packetCount,id;
         
-        if(cnt==1){
-          head=tp[0];
-          Console.print("Id:");
-          id=tp[1];
-          packetCount=tp[2];
-          Console.println(id);
+        while ( tp != NULL ) {
+          cnt++;
+          
+          if(cnt==1){
+            head=tp[0];
+            Console.print("Id:");
+            id=tp[1];
+            packetCount=tp[2];
+            Console.println(id);
+          }
+          
+          if(cnt==2){
+            Console.print("msg:");
+            msg=String(tp);
+            Console.println(msg);
+       
+          }
+          tp = strtok( NULL,"," );
         }
         
-        if(cnt==2){
-          Console.print("msg:");
-          msg=String(tp);
-          Console.println(msg);
-     
-        }
-
-
-        tp = strtok( NULL,"," );
-      }
-      
-      if(head == 'x'){ //ヘッダの確認
         Console.print("packetCount:");
         Console.print((uint8_t)packetCount);Console.print(" ");
         // print RSSI of packet
